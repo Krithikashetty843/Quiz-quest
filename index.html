@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Quest</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <button id="theme-toggle" class="theme-toggle">🌙 Dark Mode</button>
+  <div class="container">
+    <header>
+      <h1>Quiz Quest</h1>
+      <input type="text" id="username" placeholder="Enter your name" />
+      <div class="controls">
+        <select id="category-select">
+          <option value="Select Category">Select category</option>
+        </select>
+        <select id="difficulty-select">
+          <option value="easy">Easy</option>
+          <option value="moderate">Moderate</option>
+          <option value="difficult">Difficult</option>
+        </select>
+        <select id="question-count">
+          <option value="5">5 Questions</option>
+          <option value="10">10 Questions</option>
+          </select>
+        <button id="start-btn">Start Quiz</button>
+        <button id="sound-toggle">🔊</button>
+      </div>
+    </header>
+
+    <div id="quiz-box" class="hidden">
+      <div id="question-number"></div>
+      <div id="question-text"></div>
+      <div id="options"></div>
+      <div id="feedback"></div>
+      <div style="margin-top: 1rem;">
+        <span >Time Left: <span id="timer" >10</span>s</span>
+      </div>
+      <button id="next-btn" class="hidden">Next</button>
+    </div>
+    <div id="result-box" class="hidden">
+      <h2>Quiz Completed!</h2>
+      <p id="score-summary"></p>
+      <canvas id="summary-chart" width="200" height="200"></canvas>
+      <h3>Leaderboard</h3>
+      <ul id="leaderboard"></ul>
+      <div class="controls">
+        <button id="restart-btn">Restart</button>
+        <button id="review-btn">Review Answers</button>
+      </div>
+    </div>
+ <div id="review-box" class="hidden">
+      <h2>Review Answers</h2>
+      <select id="review-filter">
+        <option value="all">All</option>
+        <option value="correct">Correct</option>
+        <option value="wrong">Wrong</option>
+        <option value="skipped">Skipped</option>
+        <button id="restart-btn" class="hidden">Restart Quiz</button>
+      </select>
+      <div id="review-list"></div>
+    </div>
+  </div>
+<script src="script.js"></script>
+</body>
+</html>
