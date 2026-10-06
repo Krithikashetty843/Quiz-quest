@@ -144,11 +144,35 @@ canvas {
     width: 100%;
   }
 }
+
 /* Default Light Mode */
 body {
   background-color: #f9f9f9;
-  color:#222;
+  color: #222;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#quiz-box,
+#result-box,
+#review-box {
+  background-color: #ffffff;
+  color: #222;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"],
+select {
+  background-color: #ffffff;
+  color: #222;
+  border: 1px solid #ccc;
+}
+
+.review-item {
+  background-color: #f1f1f1;
+}
+
+.review-item em {
+  color: #555;
 }
 
 .theme-toggle {
@@ -157,18 +181,43 @@ body {
   right: 10px;
   padding: 6px 12px;
   font-size: 14px;
-  background: white;
+  background: #e0e0e0;
+  color: #222;
   border: none;
   border-radius: 6px;
   cursor: pointer;
 }
 
+/* Dark Mode */
 body.dark-mode {
   background-color: #121212;
   color: #f1f1f1;
 }
 
+body.dark-mode #quiz-box,
+body.dark-mode #result-box,
+body.dark-mode #review-box {
+  background-color: #1e1e1e;
+  color: #f1f1f1;
+  box-shadow: 0 0 10px #000;
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode select {
+  background-color: #292929;
+  color: #fff;
+  border-color: #444;
+}
+
+body.dark-mode .review-item {
+  background-color: #2b2b2b;
+}
+
+body.dark-mode .review-item em {
+  color: #bdbdbd;
+}
+
 body.dark-mode .theme-toggle {
   background: #333;
-  color:white;
+  color: #fff;
 }

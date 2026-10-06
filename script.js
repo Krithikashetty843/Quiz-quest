@@ -223,7 +223,7 @@ const categories = {
           "An if statement",
           "None of the above"
         ],
-        a: "0",
+        a: 0,
         e: "A closure is a function that retains access to its outer scope even after the outer function has closed."
       },
       {
@@ -248,8 +248,7 @@ const categories = {
         o: ["Angular", "React", "Django", "Vue"],
         a: 2,
         e: "Django is a Python web framework, not JavaScript."
-      },
-      {
+      },{
         q: "What is the output of '0 == false' in JavaScript?",
         o: ["true", "false", "undefined", "TypeError"],
         a: 0,
@@ -306,7 +305,7 @@ const categories = {
         q: "Which gas do plants absorb from the atmosphere?",
         o: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Helium"],
         a: 2,
-        explanation: "Plants absorb carbon dioxide for photosynthesis."
+        e: "Plants absorb carbon dioxide for photosynthesis."
       },
       {
         q: "What is the center of an atom called?",
@@ -532,6 +531,7 @@ const categories = {
     a: 1,
     e: "The RMS Titanic was a British passenger liner that sank in the North Atlantic Ocean in 1912, leading to over 1,500 deaths."
   },
+      
   {
     q: "In which country did the Olympic Games originate?",
     o: ["Italy", "Greece", "France", "China"],
@@ -965,31 +965,55 @@ function showQuestion() {
   answered = false;
   feedback.textContent = '';
   nextBtn.classList.add('hidden');
+
   const q = questions[currentQuestion];
-  questionNumber.textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+
+  if (!q || !Array.isArray(q.o)) {
+    console.error('Question not found:', currentQuestion, q);
+    clearInterval(timer);
+    return;
+  }
+
+  questionNumber.textContent =
+    `Question ${currentQuestion + 1} of ${questions.length}`;
+
   questionText.textContent = q.q;
   optionsBox.innerHTML = '';
+
   q.o.forEach((opt, idx) => {
     const btn = document.createElement('button');
     btn.textContent = opt;
     btn.onclick = () => selectAnswer(btn, idx);
     optionsBox.appendChild(btn);
   });
+
   timeLeft = 10;
   timerEl.textContent = timeLeft;
   clearInterval(timer);
+
   timer = setInterval(() => {
     timeLeft--;
     timerEl.textContent = timeLeft;
+
     if (timeLeft <= 0) {
       clearInterval(timer);
-      feedback.textContent = `Time's up! ${q.e}`;
+      answered = true;
+
+      feedback.textContent = `Time's up! ${q.e || ''}`;
       showCorrectAnswer();
       recordAnswer(null);
+
+      Array.from(optionsBox.children).forEach(button => {
+        button.disabled = true;
+      });
+
       nextBtn.classList.remove('hidden');
     }
   }, 1000);
 }
+
+
+
 
 function selectAnswer(btn, idx) {
   if (answered) return;
@@ -1061,10 +1085,13 @@ function renderLeaderboard() {
     leaderboard.appendChild(li);
   });
 }
-
+let summaryChart = null;
 function renderChart() {
+  if (summaryChart) {
+  summaryChart.destroy();
+}
   const ctx = document.getElementById('summary-chart').getContext('2d');
-  new Chart(ctx, {
+  summaryChart = new Chart(ctx, {
     type: 'doughnut',
     data: {
       labels: ['Correct', 'Wrong', 'Skipped'],
@@ -1084,10 +1111,26 @@ function renderChart() {
 }
 
 restartBtn.onclick = () => {
-  document.querySelector('header').classList.remove('hidden');
-  resultBox.classList.add('hidden');
-};
+  clearInterval(timer);
 
+  document.querySelector('header').classList.remove('hidden');
+  quizBox.classList.add('hidden');
+  resultBox.classList.add('hidden');
+  reviewBox.classList.add('hidden');
+
+  nextBtn.classList.add('hidden');
+  feedback.textContent = '';
+  questionText.textContent = '';
+  questionNumber.textContent = '';
+  optionsBox.innerHTML = '';
+
+  currentQuestion = 0;
+  score = 0;
+  questions = [];
+  reviewData = [];
+  timeLeft = 10;
+  timerEl.textContent = timeLeft;
+};
 reviewBtn.onclick = () => {
   reviewBox.classList.remove('hidden');
   resultBox.classList.add('hidden');

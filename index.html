@@ -12,7 +12,7 @@
   <div class="container">
     <header>
       <h1>Quiz Quest</h1>
-      <input type="text" id="username" placeholder="Entnpmer your name" />
+      <input type="text" id="username" placeholder="Enter your name" />
       <div class="controls">
         <select id="category-select">
           <option value="Select Category">Select category</option>
@@ -52,17 +52,18 @@
         <button id="review-btn">Review Answers</button>
       </div>
     </div>
- <div id="review-box" class="hidden">
-      <h2>Review Answers</h2>
-      <select id="review-filter">
-        <option value="all">All</option>
-        <option value="correct">Correct</option>
-        <option value="wrong">Wrong</option>
-        <option value="skipped">Skipped</option>
-        <button id="restart-btn" class="hidden">Restart Quiz</button>
-      </select>
-      <div id="review-list"></div>
-    </div>
+    <div id="review-box" class="hidden">
+  <h2>Review Answers</h2>
+
+  <select id="review-filter">
+    <option value="all">All Answers</option>
+    <option value="correct">Correct Answers</option>
+    <option value="wrong">Wrong Answers</option>
+    <option value="skipped">Skipped Questions</option>
+  </select>
+
+  <div id="review-list"></div>
+</div>
   </div>
 <script src="script.js"></script>
 </body>
