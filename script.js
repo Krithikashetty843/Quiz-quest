@@ -903,17 +903,44 @@ for (const cat in categories) {
   opt.textContent = cat;
   categorySelect.appendChild(opt);
 }
-
 soundToggle.onclick = () => {
   soundOn = !soundOn;
   soundToggle.textContent = soundOn ? '🔊' : '🔇';
+  soundToggle.title = soundOn ? 'Turn sound off' : 'Turn sound on';
 };
 
 function playSound(type) {
   if (!soundOn) return;
-  const audio = new Audio(type === 'correct' ? 'https://www.soundjay.com/buttons/sounds/button-3.mp3' : 'https://www.soundjay.com/buttons/sounds/button-10.mp3');
-  audio.play();
+
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+
+    const audioContext = new AudioContextClass();
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.type = 'sine';
+    oscillator.frequency.value = type === 'correct' ? 800 : 250;
+
+    gain.gain.setValueAtTime(0.15, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      audioContext.currentTime + 0.2
+    );
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.2);
+
+    oscillator.onended = () => audioContext.close();
+  } catch (error) {
+    console.error('Sound playback failed:', error);
+  }
 }
+
 
 startBtn.onclick = () => {
   const category = categorySelect.value;
