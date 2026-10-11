@@ -942,24 +942,61 @@ function playSound(type) {
 }
 
 
-startBtn.onclick = () => {
+
+startBtn.onclick = async () => {
   const category = categorySelect.value;
   const difficulty = difficultySelect.value;
   const qCount = parseInt(questionCountSelect.value);
   const username = usernameInput.value.trim() || 'Anonymous';
 
-  if (!category || !difficulty || !qCount) return alert('Please select all options');
+  if (!category || !difficulty || !qCount) {
+    return alert('Please select all options');
+  }
 
-   questions = categories[category][difficulty].slice(0, qCount);
-  currentQuestion = 0;
-  score = 0;
-  reviewData = [];
-  document.querySelector('header').classList.add('hidden');
-  quizBox.classList.remove('hidden');
-  resultBox.classList.add('hidden');
-  reviewBox.classList.add('hidden');
-  showQuestion();
+  try {
+    const response = await fetch('http://localhost:5000/api/questions');
+
+    if (!response.ok) {
+      throw new Error('Failed to load questions');
+    }
+
+    const data = await response.json();
+
+    const filteredQuestions = data.filter(
+      q =>
+        q.category.toLowerCase() === category.toLowerCase() &&
+        q.difficulty.toLowerCase() === difficulty.toLowerCase()
+    );
+
+    if (filteredQuestions.length === 0) {
+      return alert(
+        'No questions available for this category and difficulty in the backend yet.'
+      );
+    }
+
+    questions = filteredQuestions.slice(0, qCount).map(q => ({
+      q: q.question,
+      o: q.options,
+      a: q.answer,
+      e: q.explanation || ''
+    }));
+
+    currentQuestion = 0;
+    score = 0;
+    reviewData = [];
+
+    document.querySelector('header').classList.add('hidden');
+    quizBox.classList.remove('hidden');
+    resultBox.classList.add('hidden');
+    reviewBox.classList.add('hidden');
+
+    showQuestion();
+  } catch (error) {
+    console.error('Error loading questions:', error);
+    alert('Could not connect to the backend. Make sure your server is running.');
+  }
 };
+
 
 function showQuestion() {
   answered = false;
